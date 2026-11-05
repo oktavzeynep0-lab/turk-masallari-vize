@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türk Masalları Derlemesi</title>
+    
+    <style>
+        /* Editorial ve Minimalist Renk Paleti */
+        :root {
+            --bg-color: #fbfbfb;
+            --text-main: #111111;
+            --text-muted: #777777;
+            --border-color: #e2e2e2;
+            --accent-bg: #f0f0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- ÜST BİLGİ VE NAVİGASYON --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #ffffff;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .capsule-input, .capsule-btn, .capsule-select {
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background-color: #ffffff;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .capsule-input {
+            width: 250px;
+        }
+
+        .capsule-input:focus, .capsule-select:focus {
+            border-color: var(--text-main);
+        }
+
+        .capsule-select {
+            cursor: pointer;
+            appearance: none; 
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23111111%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem top 55%;
+            background-size: 0.65rem auto;
+        }
+
+        .capsule-btn {
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .capsule-btn:hover, .capsule-btn.active {
+            background-color: var(--text-main);
+            color: #ffffff;
+            border-color: var(--text-main);
+        }
+
+        /* --- HAKKINDA BÖLÜMÜ --- */
+        #about-section {
+            display: none;
+            padding: 4rem;
+            background-color: var(--accent-bg);
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            animation: fadeInDown 0.4s ease;
+        }
+
+        #about-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        #about-section p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        #about-section a {
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-color: var(--border-color);
+            transition: text-decoration-color 0.3s;
+        }
+
+        #about-section a:hover {
+            text-decoration-color: var(--text-main);
+        }
+
+        /* --- KÜTÜPHANE GÖRÜNÜMÜ --- */
+        #library-section {
+            flex: 1;
+            padding: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: var(--text-muted);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        #library-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 4rem 3rem;
+        }
+
+        /* 3D Kitap ve Meta Bilgileri */
+        .book-wrapper {
+            perspective: 1200px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 3.1;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.12);
+            border-radius: 2px 6px 6px 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .book::before {
+            content: '';
+            position: absolute;
+            top: 2%;
+            right: -4px;
+            width: 4px;
+            height: 96%;
+            background-color: #f9f9f9;
+            border-radius: 0 2px 2px 0;
+            border: 1px solid #eaeaea;
+            z-index: -1;
+        }
+
+        .book.is-open {
+            transform: rotateY(-160deg);
+        }
+
+        .book-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: inherit;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .book-front::after {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid rgba(0,0,0,0.12);
+            pointer-events: none;
+        }
+
+        .book-front h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.3;
+            font-family: Georgia, serif;
+            letter-spacing: -0.5px;
+        }
+
+        /* Özgün Pastel Ton Sınıfları */
+        .cilt-krem { background-color: #f4ebd0; color: #4a4231; }
+        .cilt-yesil { background-color: #93a193; color: #ffffff; }
+        .cilt-lila { background-color: #b5adc0; color: #ffffff; }
+        .cilt-gul { background-color: #d69f93; color: #ffffff; }
+        .cilt-pudra { background-color: #f2c6d0; color: #5a4047; }
+        .cilt-murdum { background-color: #5c4154; color: #f4ebd0; }
+        .cilt-turkuaz { background-color: #54737a; color: #ffffff; }
+        .cilt-mavi { background-color: #8da4c4; color: #ffffff; }
+
+        .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            background: #ffffff;
+            border-radius: 6px 2px 2px 6px;
+            border-left: 3px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            padding-left: 0.5rem;
+        }
+
+        .book-meta .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .book-meta .author {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- OKUMA GÖRÜNÜMÜ --- */
+        #reading-view {
+            display: none;
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .font-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .font-controls span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.5rem;
+        }
+
+        #reading-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        #reading-content p {
+            font-size: 1.1rem; 
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            color: #222;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            transition: font-size 0.3s ease;
+        }
+
+        /* --- ALT BİLGİ (FOOTER) --- */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           MOBİL UYUMLULUK (Responsive Design)
+           ========================================= */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1.5rem 1rem;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .nav-controls {
+                flex-direction: column;
+                width: 100%;
+                gap: 1rem;
+            }
+            .capsule-input, .capsule-btn, .capsule-select {
+                width: 100%;
+                text-align: center;
+            }
+            #library-section {
+                padding: 2rem 1.5rem;
+            }
+            .library-header {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .filter-group {
+                width: 100%;
+            }
+            #library-view {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 2.5rem 1rem;
+            }
+            .book-front {
+                padding: 1rem 0.5rem;
+            }
+            .book-front h3 {
+                font-size: 1rem;
+            }
+            #reading-view {
+                padding: 2rem 1.5rem;
+            }
+            .toolbar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            .font-controls {
+                justify-content: center;
+            }
+            #reading-content h2 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            #about-section {
+                padding: 2rem 1.5rem;
+            }
+            #about-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        #masal-verileri { display: none; }
+    </style>
+</head>
+<body>
+    
+    <!-- ÜST BİLGİ & NAVİGASYON -->
+    <header>
+        <div class="logo">TÜRK MASALLARI</div>
+        <div class="nav-controls">
+            <input type="text" id="masal-arama" class="capsule-input" placeholder="Kütüphanede ara...">
+            <button class="capsule-btn" id="btn-hakkinda">Hakkında</button>
+        </div>
+    </header>
+
+    <!-- HAKKINDA BÖLÜMÜ -->
+    <section id="about-section">
+        <h2>Kolektif Hayal Gücü Kütüphanesi</h2>
+        <p>Bu proje, nesilden nesile aktarılan anonim Türk halk anlatılarını modern, dijital ve tipografik bir arayüzle yeniden sunmayı amaçlamaktadır. Masal metinlerinin kurgulanmasında <strong><a href="https://www.kulturportali.gov.tr/portal/masallar-1" target="_blank" rel="noopener noreferrer">Türkiye Kültür Portalı</a></strong> arşivlerinden ve yerel derlemelerden yararlanılmış; hikayeler okuma deneyimini artırmak amacıyla özgün yapısı korunarak sadeleştirilmiştir.</p>
+    </section>
+
+    <!-- KÜTÜPHANE GÖRÜNÜMÜ -->
+    <div id="library-section">
+        
+        <div class="library-header">
+            <h2 class="section-title">Masallara Göz Atın.</h2>
+            <div class="filter-group">
+                <select id="kategori-filtre" class="capsule-select">
+                    <option value="tumu">Tüm Türler</option>
+                    <option value="hayvan">Hayvan Masalları</option>
+                    <option value="egitici">Eğitici Masallar</option>
+                    <option value="fantastik">Fantastik Masallar</option>
+                </select>
+            </div>
+        </div>
+
+        <main id="library-view">
+            <!-- JavaScript 3D kitapları buraya yükleyecek -->
+        </main>
+    </div>
+
+    <!-- OKUMA GÖRÜNÜMÜ -->
+    <div id="reading-view">
+        <div class="toolbar">
+            <button class="capsule-btn" onclick="kutuphaneyeDon()">← Geri Dön</button>
+            <div class="font-controls">
+                <span>Metin Boyutu</span>
+                <button class="capsule-btn" onclick="fontDegistir(-1)">A-</button>
+                <button class="capsule-btn" onclick="fontDegistir(1)">A+</button>
+            </div>
+        </div>
+        <div id="reading-content">
+            <!-- Seçilen masal buraya yüklenecek -->
+        </div>
+    </div>
+
+    <!-- ALT BİLGİ -->
+    <footer>
+        <p>Türk Masalları Derlemesi Vize Projesi | Görsel İletişim Tasarımı</p>
+        <p>© 2026 Türk Masalları. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <!-- GİZLİ VERİ DEPOSU -->
+    <div id="masal-verileri">
+        <article data-title="Öksüz Kız" data-theme="cilt-krem" data-category="egitici">
+            <p>Evvel zaman içinde, kalbur saman içinde, annesini kaybeden öksüz bir kız yaşarmış. Babası yeniden evlenince, eve gelen üvey anne bu kıza hayatı zindan etmeye başlamış. Kadın, kızı her gün eline sadece kuru bir arpa ekmeği tutuşturup tarlaya inek gütmeye gönderirmiş. Boğazından geçmeyen bu kuru ekmekle aç kalan kızın haline acıyan inek bir gün dile gelmiş: "Sen o ekmeği bana ver, benim kulağımdan içeri girip oradaki güzel yemeklerle karnını doyur."</p>
+            <p>Kız her gün ineğin kulağındaki ziyafetle beslenip günden güne güzelleşirken, üvey annenin kendi öz kızı ne kadar iyi beslense de çelimsiz kalıyormuş. Durumdan şüphelenen kadın, bir gün kendi kızını arpa ekmeğiyle tarlaya göndermiş. Ancak inek, kıza hiç yüz vermemiş; kuru ekmeği yutmaya çalışan kız az kalsın boğuluyormuş. Üvey anne pes etmeyip öksüz kıza bir yığın pamuk vererek "Bunu incecik ip yapacaksın" demiş. Kız ağlarken yine inek yardıma koşmuş, pamuğu yutup kulağından incecik, kusursuz iplikler çıkarmış. Öz kızı aynı işi denediğinde ise beceremeyip kalın kalın iplerle geri dönmüş.</p>
+            <p>Sırrın inekte olduğunu anlayan üvey anne, kocasını ikna edip ineği kestirmeye karar vermiş. İnek, ağlayan kıza son kez öğüt vermiş: "Etim onlara zehir gibi acı, sana ise şeker gibi tatlı gelecek. Beni yediklerinde kemiklerimi topla, beyaz bir beze sarıp yemliğin altına sakla." Gerçekten de et üvey anne ve kızına acı gelirken, öksüz kız afiyetle yemiş ve kemikleri saklamış.</p>
+            <p>Aylar sonra padişahın düğünü için davet gelmiş. Üvey anne, öksüz kızı evde bırakırken önüne imkansız iki görev koymuş: Bir kazan dolusu gözyaşı dökmek ve birbirine karışmış buğdayla mercimeği tek tek ayıklamak. Kız çaresizce ağlarken yoldan geçen bir tuzcu, "Bir ölçek tuzla iki teneke suyu karıştır, al sana gözyaşı" diyerek ona yardım etmiş. Kapıdan geçen elekçiler de verdikleri bir parça ekmek karşılığında buğdayla mercimeği şipşak eleyivermiş.</p>
+            <p>İşleri bitiren kız, ineğin kemiklerini sakladığı yemliğe koşmuş. Bir de bakmış ki kemiklerin yerinde sırma işlemeli elbiseler ve eğerlenmiş bir at duruyor! Hemen giyinip düğüne giden kızı herkes, hatta üvey annesi bile padişahın kızı sanmış. Düğün bitmeden kimseye yakalanmamak için hızla kaçarken, kız ayakkabısının tekini çeşme başında düşürmüş.</p>
+            <p>Ertesi gün padişahın oğlu atını sularken o zarif ayakkabıyı bulmuş ve "Bu ayakkabı kimin ayağına uyarsa onunla evleneceğim" diye ferman salmış. Ülkedeki tüm genç kızlar denemiş ama ayakkabı sadece öksüz kızın ayağına tam oturmuş. Çatlayan üvey anneye inat, padişahın oğluyla evlenen kız, ömür boyu mutlu yaşamış.</p>
+        </article>
+
+        <article data-title="Kurnaz Kurt" data-theme="cilt-yesil" data-category="hayvan">
+            <p>Ulu mu ulu, etekleri bağlık, tepesi karlı yüce bir dağda iri kıyım, canavar gözlü bir kurt yaşarmış. Gece oldu mu düze iner, köyde keçi, at, eşek ne bulursa silip süpürürmüş. Canına tak eden köylüler yedi koldan dağa çıkıp günlerce iz sürerek kurdu canlı yakalamış ve köy odasına getirmişler.</p>
+            <p>Odada dayak bekleyen kurt, köylülerin "Neden malımızı yiyorsun?" sorusuna kurnazca cevap vermiş: "Benim de gıdam et. Hayvanlarınızı yemeyeyim de taş mı yiyeyim? Eğer malınız canınız kıymetliyse bana her gün bir kilo et getirin, ben de sürünüze dokunmayayım." Köylüler çaresiz kabul etmiş, dağa bir yuva yapıp kurda sırayla et taşımaya başlamışlar.</p>
+            <p>Gel zaman git zaman köyde hayvan kalmamaya yüz tutunca köylüler et götürmeyi kesmiş. Yuvasında açlıktan gözü dönen kurt, düze inip otlayan bir eşekle sıpasını afiyetle yemiş. Eşeğin feryadını duyan sahibi köylüleri toplayıp kurdu yeniden köy odasına getirmiş.</p>
+            <p>"Niye sözünü bozdun?" diye çıkışan köylülere kurt sırıtmış: "Et getirmezseniz danasını bile yerim. Dahası, aç kalırsam sizi de yerim!" Kurdun pervasızlığından ödü kopan köylüler odayı birer birer terk etmiş. Köylülerin korktuğunu görüp kendi de korkan kurnaz kurt, ilk fırsatta oradan kaçmış ve bir daha o diyarlarda hiç görünmemiş.</p>
+        </article>
+
+        <article data-title="Tembel Çocuk ve Padişah Kızı" data-theme="cilt-lila" data-category="egitici">
+            <p>Evvel zaman içinde, yatağından bile çıkmayan, her şeyi ayağına bekleyen aşırı tembel bir oğlan varmış. Anası ne yapsa kâr etmezmiş. Aynı günlerde, uğursuz ilan edilip saraydan kovulan bir padişah kızı, yapa yalnız dolaşırken tesadüfen bu oğlanın kulübesine sığınmış. Yattığı yerden kızdan ekmek isteyen oğlan, beklemediği bir tepki almış. Kız oğlanı sopayla bir güzel pataklayıp, "Kalk kendin al!" diyerek ona hayatın gerçeklerini öğretmiş. Kızın inadı sayesinde oğlan tembelliği bırakıp deveci yamağı olarak çalışmaya başlamış ve kazandığı her kuruşu kıza getirir olmuş.</p>
+            <p>Oğlan devecilerle uzun bir yolculuğa çıktığında, kervanın suyu tükenmiş. Yolda buldukları kurumuş kuyuya inmeyi tek göze alan bizim oğlan olmuş. Kuyunun dibinde karşılaştığı ak sakallı dede, ona gizemli bir nar ve bir havlu verip suyu geri getirmiş. Oğlan sıvıların akmasıyla birlikte hızla eve dönüp bu emanetleri padişah kızına bırakmış ve kervana geri katılmış.</p>
+            <p>Oğlan yokken kız narı kırmış; içinden paha biçilmez elmaslar dökülmüş. Havluyu açtığında ise koca bir ordu belirmiş. Kız bu sihirli zenginlikle muazzam bir saray inşa ettirmiş. Aylar sonra dönen yorgun oğlan, kulübesinin yerinde yeller estiğini görüp taşa çökmüşken, askerler gelip onu yaka paça saraya götürmüş. Yıkanıp padişahlara layık giydirilen oğlan, karşısında o inatçı kızı görünce neye uğradığını şaşırmış. Bando mızıkalar eşliğinde evlenmişler ve oğlan o diyarın şahı olmuş.</p>
+        </article>
+
+        <article data-title="Mitişik Kız" data-theme="cilt-gul" data-category="fantastik">
+            <p>Birbiriyle yoldaş beş kız, ormanda çalı çırpı toplarken akşam olmuş. Yorulup kapısını çaldıkları ev, meğer bir dev anasının iniyormuş. Dev anası kızları içeri alıp doyurmuş ve yumuşak yataklara yatırmış. Niyeti, kızlar uykuya daldığında onları mideye indirmekmiş.</p>
+            <p>Kızların içindeki en uyanık olan Mitişik Kız, devin niyetini sezmiş. Dev anası dişlerini bileyip usulca "Kim uyuyor, kim uyanık?" diye seslenince Mitişik Kız atılmış. "Ben uyuyamıyorum, çünkü anam yatmadan önce bana hep baklava börek yedirirdi." Dev anası kız uyusun diye hemen tatlıları hazırlamış. Mitişik Kız arkadaşlarını uyandırıp tatlıları yedirmiş ama yine uyumamış.</p>
+            <p>Dev anası tekrar geldiğinde Mitişik Kız bu kez, "Anam bana ırmaktan kalburla su getirirdi, içmeden uyuyamam" demiş. Çaresiz dev anası kalburu kapıp ırmağa koşmuş ama delikli kalburla su taşıyamadığından çamurla delikleri tıkamaya uğraşırken vakit kaybetmiş. O sırada Mitişik Kız, topladıkları tüm çalı çırpıyı evin ortasına yığıp ateşe vermiş ve arkadaşlarıyla kaçmış. Evinin kül olduğunu gören dev anası, "Ah Mitişik, vah Mitişik, hem baklavamı yedin hem evimi yaktın!" diyerek alevlerin ortasında kalakalmış.</p>
+        </article>
+
+        <article data-title="Korkak Adam ve Devler" data-theme="cilt-pudra" data-category="fantastik">
+            <p>Korkusundan tuvalete bile karısıyla giden bir adam varmış. Bir gece canına tak eden karısı, adamı tuvalete kilitleyip gitmiş. Adam pencereden zor bela kaçıp günlerce yürümüş ve kendini devlerin yaşadığı devasa bir sarayda bulmuş. Kırk devin kaynayan kırk kazan başında oturduğunu görünce, korkusunu gizleyip "Yıllardır sizi arıyorum evlatlarım, ben sizin dedenizim!" diye yalan söylemiş. Devler de bu yaşlı adamın cesaretine kanıp onu baş köşeye oturtmuş.</p>
+            <p>Ancak devler dedelerinden sıkılıp onu gece baltayla öldürmeye karar vermiş. Bunu duyan adam, yatağına koca bir kütük koyup dolaba saklanmış. Devler gece kütüğü parçalayıp gittiklerinde adam yatağına dönmüş. Sabah uyanıp "Gece pireler beni biraz rahatsız etti" deyince devlerin ödü kopmuş. Kurtulmak için yürüyüş yarışı düzenlemişler. Toz çıkarma yarışında adam, çizmelerine önceden doldurduğu tozları saça saça yürüyünce devleri yine alt etmiş.</p>
+            <p>Son çare olarak taşı sıkıp suyunu çıkarma yarışı yapmışlar. Adam cebine sakladığı beyaz peyniri gizlice taşın arasına koyup sıkınca sular süzülmüş. "Ben sadece un etmem, suyunu da çıkarırım!" diyen adama devler boyun eğmiş. İki çuval altın verdikleri dedelerini omuzlarında köyüne kadar taşımışlar. Karısı kocasının dönüşüne şaşırırken adam altınları yere serip, "Beni tuvalete kilitlemeseydin bunları rüyamızda bile göremezdik!" demiş.</p>
+        </article>
+
+        <article data-title="Kırk Dost Masalı" data-theme="cilt-murdum" data-category="egitici">
+            <p>Babasının servetini etrafındaki kırk dalkavuk arkadaşıyla har vurup harman savuran hayırsız bir oğlan varmış. Babası ölmeden önce ona, "Dara düşersen tavandaki şu halkadan kendini as," diye vasiyet etmiş. Oğlan mirası da yiyip bitirince bir lokma ekmeğe muhtaç kalmış. Eski kırk tüccar dostu artık ona selam bile vermez olmuş. Bir gün bu tüccarlar kıra gezmeye çıkarken, oğlan arkalarından yalvararak "Elbiselerinizi bekler, yemeğinizi yaparım" diyerek peşlerine takılmış.</p>
+            <p>Oğlan kazları kızartırken gökten inen bir çalağan (kartal) kuşları kapıp kaçmış. Tüccarlar gelip yemeği bulamayınca oğlanı dövmeye kalkmışlar. Oğlan can havliyle kaçıp evine sığınmış ve çaresizce kendini babasının söylediği tavandaki halkaya asmış. O an tavan çökmüş ve halkanın içinden çuvallar dolusu mücevher dökülmüş. Odaya giren tüccarlar cevherleri görünce sopaları atıp eski dostları olmuşlar.</p>
+            <p>Oğlan elmaslarla eskisinden de zengin olmuş ama artık akıllanmış. Kırk tüccarı evine ziyafete davet etmiş. Yemekte, "Kılıcımın ucunu fare yemiş," demiş. Kırk dostu "Fare bu, demiri bile kemirir," diye onaylayınca oğlan kükremiş: "Ulan fare kılıcı yer de çalağan kazı kaçıramaz mı!" Hemen sakladığı kırk adamını çağırıp tüccarları bir güzel dövdürmüş ve evinden atmış. Dünyada malın varken dostun bol, malın yokken düşmanın çok olduğunu böylece öğrenmiş.</p>
+        </article>
+
+        <article data-title="Üç Haylaz Masalı" data-theme="cilt-turkuaz" data-category="hayvan">
+            <p>Bir çiftlikte yaşayan kısa boylu horoz, gururlu hindi ve alçak bacaklı ördek, günlerini sıkıntıyla geçirirmiş. Çiftliğin güvenli sınırları onlara dar gelmeye başlayınca, kırların çiçek kokusuna ve özgürlüğe aldanıp evden kaçmaya karar vermişler. Dağ tepe demeden gezip tozan üç kafadar, başlarda bu başıboş hayatın tadını çıkarmış.</p>
+            <p>Ancak akşamın alaca karanlığı çöküp mideleri guruldamaya başlayınca işler değişmiş. Ne yiyecek ne de içecek bulabilen haylazlar, geri dönmeyi de gururlarına yedirememiş. Karanlıkta yollarını kaybedip ulu bir dağın yamacında bir devle karşılaşınca korkudan ne yapacaklarını şaşırmışlar. Can havliyle oradan kaçıp Hindistan'a kadar sürüklenmişler.</p>
+            <p>Orada hokkabazlık yaparak ceplerini dolduran üç ahbap, dönüş yolunda göz kamaştırıcı hazinelerle dolu bir mağaraya rastlamış. Devlerin hazinesine açgözlülükle saldırıp tam ceplerini doldururken, umulmadık bir yerden fırlayan sinsi bir tilki üçünü de avlayıp midelerine indirmiş. Rahat battığı için evini terk eden akılsız başların cezası işte böyle acı olmuş.</p>
+        </article>
+
+        <article data-title="İncili Çadır" data-theme="cilt-mavi" data-category="fantastik">
+            <p>Çocuğu olmayan bir padişah, yolda rastladığı nur yüzlü bir ihtiyarın verdiği sihirli elma sayesinde nur topu gibi bir kız çocuğuna sahip olmuş. Ancak vezirlerin "Bu kız büyüyünce çok güzel olacak, başımıza dert açar" uyarısıyla padişah, kızı yeraltında, gün yüzü görmeyen bir saraya hapsetmiş. On beş yaşına gelen genç kız, bir gün yanlışlıkla kırdığı camdan sızan ışığın peşine düşüp saraydan kaçmış.</p>
+            <p>Dağ başında her yeri incilerle süslü muazzam bir çadır bulmuş. İçeride uyuyan padişah oğlunun yemeğinden yemiş, suyunu içmiş ve uyanmadan geri kaçmış. Sonraki gece tekrar geldiğinde delikanlı kızı yakalamış ve "Sen kimsin?" diye sormuş. Kızı sabaha kadar bırakmamış ama sabah uyanınca çadır toplanmış ve kız yalnız başına dağda kalmış.</p>
+            <p>Sevdiği adamın memleketine döndüğünü öğrenen kız, bir çobandan aldığı eski püskü elbiseleri giyip, başına da bir koyun işkembesi geçirerek kılık değiştirmiş. "Keloğlan" kılığında Şehvaneli'ne giden kız, padişah oğlunun karşısına çıkıp incili çadırda olanları şiirle anlatmış. Şiiri duyan delikanlı, karşısındaki "Keloğlan"ın aslında incili çadırdaki dünya güzeli kız olduğunu anlamış ve hemen evlenmişler.</p>
+        </article>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const libraryView = document.getElementById('library-view');
+            const dataArticles = document.querySelectorAll('#masal-verileri article');
+            const aramaKutusu = document.getElementById('masal-arama');
+            const kategoriFiltresi = document.getElementById('kategori-filtre');
+            const btnHakkinda = document.getElementById('btn-hakkinda');
+            const secHakkinda = document.getElementById('about-section');
+            
+            let gecerliFontBoyutu = 1.1; 
+
+            // 1. HAKKINDA BUTONU
+            btnHakkinda.addEventListener('click', () => {
+                if (secHakkinda.style.display === 'block') {
+                    secHakkinda.style.display = 'none';
+                    btnHakkinda.classList.remove('active');
+                } else {
+                    secHakkinda.style.display = 'block';
+                    btnHakkinda.classList.add('active');
+                }
+            });
+
+            // 2. 3D KİTAPLARI OLUŞTUR
+            dataArticles.forEach((article) => {
+                const title = article.getAttribute('data-title');
+                const themeClass = article.getAttribute('data-theme'); 
+                const category = article.getAttribute('data-category'); 
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'book-wrapper';
+                wrapper.setAttribute('data-title', title.toLowerCase()); 
+                wrapper.setAttribute('data-category', category);
+
+                const book = document.createElement('div');
+                book.className = 'book';
+
+                const frontCover = document.createElement('div');
+                frontCover.className = `book-front ${themeClass}`;
+                frontCover.innerHTML = `<h3>${title}</h3>`; 
+
+                const backCover = document.createElement('div');
+                backCover.className = 'book-back';
+                backCover.innerHTML = '<span style="color:#ccc; font-size:2rem;">❦</span>';
+                
+                book.appendChild(frontCover);
+                book.appendChild(backCover);
+
+                const metaBox = document.createElement('div');
+                metaBox.className = 'book-meta';
+                metaBox.innerHTML = `
+                    <span class="title">${title}</span>
+                    <span class="author">Anonim Türk Masalı</span>
+                `;
+                
+                wrapper.appendChild(book);
+                wrapper.appendChild(metaBox);
+                libraryView.appendChild(wrapper);
+
+                // 3. TIKLAMA VE GEÇİŞ
+                wrapper.addEventListener('click', () => {
+                    book.classList.add('is-open');
+                    setTimeout(() => {
+                        document.getElementById('library-section').style.display = 'none';
+                        secHakkinda.style.display = 'none'; 
+                        btnHakkinda.classList.remove('active');
+
+                        const readingView = document.getElementById('reading-view');
+                        readingView.style.display = 'block';
+
+                        const contentTarget = document.getElementById('reading-content');
+                        contentTarget.innerHTML = `<h2>${title}</h2>` + article.innerHTML;
+
+                        guncelleFontBoyutu();
+                        window.scrollTo(0,0);
+                    }, 800); 
+                });
+            });
+
+            // 4. ARAMA VE KATEGORİ FİLTRELEME
+            function filtreleriUygula() {
+                const arananKelime = aramaKutusu.value.toLowerCase();
+                const secilenKategori = kategoriFiltresi.value;
+                const tumKitaplar = document.querySelectorAll('.book-wrapper');
+                
+                tumKitaplar.forEach(kitap => {
+                    const kitapBasligi = kitap.getAttribute('data-title');
+                    const kitapKategorisi = kitap.getAttribute('data-category');
+                    
+                    const kelimeUyuyor = kitapBasligi.includes(arananKelime);
+                    const kategoriUyuyor = (secilenKategori === 'tumu' || secilenKategori === kitapKategorisi);
+                    
+                    if(kelimeUyuyor && kategoriUyuyor) {
+                        kitap.style.display = 'flex';
+                    } else {
+                        kitap.style.display = 'none';
+                    }
+                });
+            }
+
+            aramaKutusu.addEventListener('input', filtreleriUygula);
+            kategoriFiltresi.addEventListener('change', filtreleriUygula);
+            
+            // 5. OKUMA AYARI
+            window.fontDegistir = function(yon) {
+                if(yon > 0 && gecerliFontBoyutu < 1.8) {
+                    gecerliFontBoyutu += 0.15;
+                } else if(yon < 0 && gecerliFontBoyutu > 0.9) {
+                    gecerliFontBoyutu -= 0.15;
+                }
+                guncelleFontBoyutu();
+            };
+
+            function guncelleFontBoyutu() {
+                const paragraflar = document.querySelectorAll('#reading-content p');
+                paragraflar.forEach(p => {
+                    p.style.fontSize = gecerliFontBoyutu + 'rem';
+                });
+            }
+        });
+
+        // 6. GERİ DÖN BUTONU
+        function kutuphaneyeDon() {
+            document.getElementById('reading-view').style.display = 'none';
+            document.getElementById('library-section').style.display = 'block';
+            
+            document.querySelectorAll('.book').forEach(book => {
+                book.classList.remove('is-open');
+            });
+        }
+    </script>
+</body>
+</html>
