@@ -1,0 +1,492 @@
+% ====================================================================
+% VİZE RAPORU – Türk Masalları Derlemesi Web Sayfası
+% DERLEME: Overleaf'te Menu > Compiler > XeLaTeX (pdfLaTeX de çalışır).
+% ====================================================================
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else
+  \usepackage{fontspec}
+\fi
+\usepackage[turkish]{babel}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlist{itemsep=2pt, topsep=4pt}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, urlcolor=blue!50!black}
+
+\definecolor{ana}{HTML}{14325C}
+\definecolor{acik}{HTML}{EEF2F8}
+
+\lstset{basicstyle=\ttfamily\small, backgroundcolor=\color{acik},
+  frame=single, rulecolor=\color{ana}, breaklines=true,
+  columns=fullflexible, keepspaces=true, showstringspaces=false}
+
+% Tablo ayarları
+\renewcommand{\arraystretch}{1.3}
+
+% Üst ve alt bilgi (Header/Footer)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{gray}{\small Türk Masalları}}
+\fancyhead[R]{\textcolor{gray}{\small Vize Raporu}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- Yardımcı komutlar ----------
+\newcommand{\aciklama}[1]{{\color{gray}\itshape (#1)}}
+
+% Haftalık tablo görseli: dosya yoksa "görsel ekleyin" kutusu çıkar
+\newcommand{\haftagorsel}[1]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=\linewidth,height=4.2cm,keepaspectratio]{#1}%
+  }{%
+    \fbox{\parbox[c][2.6cm][c]{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      \centering\small\color{gray} Ekran görüntüsü / görsel ekleyin\\ \texttt{#1}}}%
+  }%
+}
+
+% Bölüm 3.4 ekran görüntüsü: dosya varsa ince çerçeveli görsel, yoksa uyarı kutusu
+% #1 = dosya adı, #2 = genişlik
+\newcommand{\ekrangorsel}[2]{%
+  \IfFileExists{#1}{%
+    {\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.5pt}%
+     \fcolorbox{gray!60}{white}{\includegraphics[width=\dimexpr#2-1pt\relax]{#1}}}%
+  }{%
+    \fbox{\parbox[c][4cm][c]{\dimexpr#2-2\fboxsep-2\fboxrule\relax}{%
+      \centering\small\color{gray} Ekran görüntüsü ekleyin\\ \texttt{#1}}}%
+  }%
+}
+
+% Haftalık katılım kutuları
+\newcommand{\katilimkutulari}{\par\vspace{3pt}\small $\square$ Ders içinde katılım sergiledim\par $\boxtimes$ Telafi yaptım}
+\newcommand{\katilimkutularibos}{\par\vspace{3pt}\small $\square$ Ders içinde katılım sergiledim\par $\square$ Telafi yaptım}
+
+% Ek görsel komutunu şablonu temiz tutmak için devre dışı bıraktık
+\newcommand{\haftaek}[1]{}
+
+% ---------- Kapak bilgileri ----------
+\newcommand{\universite}{İstanbul Medipol Üniversitesi / Görsel İletişim Tasarımı}
+\newcommand{\dersadi}{Programlamaya Giriş}
+\newcommand{\hocaadi}{Meral Şentürk}
+\newcommand{\ogrenciadi}{Zeynep Oktav}
+\newcommand{\ogrencino}{86230023}
+\newcommand{\projeadi}{Türk Masalları}
+% Bağlantıları tam adres olarak yazın (https:// ile başlayarak)
+\newcommand{\githublink}{\url{https://github.com/oktavzeynep0-lab/turk-masallari-vize}}
+\newcommand{\youtubelink}{\url{https://youtu.be/-b3_Y1uaCPI}}
+
+\begin{document}
+
+% ====================================================================
+% KAPAK
+% ====================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\large İstanbul Medipol Üniversitesi / Görsel İletişim Tasarımı}\\[2cm]
+
+    {\Huge \bfseries \color{ana} Türk Masalları}\\[1cm]
+
+    {\Large Türk Masalları Derlemesi Web Sayfası}\\[0.5cm]
+    {\large Vize Raporu}\\[3cm]
+
+    {\textbf{Ders:} Programlamaya Giriş}\\[0.3cm]
+    {\textbf{Öğretim Üyesi:} Meral Şentürk}\\[1.5cm]
+
+    {\textbf{Hazırlayan:} Zeynep Oktav}\\[0.3cm]
+    {\textbf{Öğrenci No:} 86230023}\\[2cm]
+
+    \vfill
+
+    % Proje Bağlantıları Kutusu
+    \fbox{\parbox{0.88\linewidth}{\centering\vspace{6pt}
+{\large\bfseries Proje Bağlantıları}\\[8pt]
+\textbf{GitHub deposu:}\\ \githublink \\[8pt]
+\textbf{YouTube sunum videosu:}\\ \youtubelink
+\vspace{6pt}}}
+
+    \vfill
+    {\large \today \par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ====================================================================
+\section{Giriş}
+% ====================================================================
+
+\subsection{Proje Özeti}
+Bu proje, anonim Türk halk anlatılarından seçilen sekiz masalı tek bir web sayfasında
+bir araya getiren dijital bir masal kütüphanesidir. Sayfada her masal, renkli bir kapağı
+olan üç boyutlu bir kitap olarak gösterilir; kitaba tıklandığında kapak açılır ve masal
+sade bir okuma ekranında sunulur. Kullanıcı masalları başlığa göre arayabilir, türe göre
+(hayvan, eğitici, fantastik) süzebilir ve okurken yazı boyutunu değiştirebilir.
+Sayfa; HTML, içsel CSS ve içsel JavaScript ile tek bir dosyada hazırlanmıştır.
+Masal metinlerinin kurgulanmasında Türkiye Kültür Portalı arşivlerinden yararlanılmıştır.
+Bu rapor; masalların seçimini, tasarım kararlarını, kodun işleyişini ve haftalık katkıları
+içermektedir.
+
+\subsection{Gereksinimlerin Karşılanması}
+\begin{center}
+\rowcolors{2}{acik}{white}
+\begin{tabular}{@{}p{8.2cm}c@{}}
+\toprule
+\rowcolor{ana}\textcolor{white}{\textbf{Gereksinim}} & \textcolor{white}{\textbf{Durum}} \\
+\midrule
+Masal sayısı 8--12 arasında (8 masal)               & $\boxtimes$ \\
+Tek HTML dosyası                                    & $\boxtimes$ \\
+Stil kodları içsel (\texttt{<style>} içinde)        & $\boxtimes$ \\
+Betik kodları içsel (\texttt{<script>} içinde)      & $\boxtimes$ \\
+İnternetsiz açılıp çalışıyor                        & $\boxtimes$ \\
+JavaScript sayfada anlamlı bir işlev görüyor        & $\boxtimes$ \\
+Masal metinleri kendi cümlelerimle yazıldı          & $\boxtimes$ \\
+Sayfa telefonda da düzgün görünüyor                 & $\boxtimes$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ====================================================================
+\section{Masalların Seçimi}
+% ====================================================================
+
+\begin{longtable}{@{}cp{4cm}p{3cm}p{5.4cm}@{}}
+\toprule
+\textbf{No} & \textbf{Masal} & \textbf{Tür} & \textbf{Seçilme nedeni} \\
+\midrule
+\endhead
+1 & Öksüz Kız & Eğitici & Öksüz kızın zorluklarla sınandığı ve sonunda mutluluğa ulaştığı bir anlatı. \\
+2 & Kurnaz Kurt & Hayvan & Köylüler ile kurdun pazarlığını konu alan kısa bir hayvan masalı. \\
+3 & Tembel Çocuk ve Padişah Kızı & Eğitici & Tembel bir oğlanın çalışmayı öğrenerek değiştiği bir hikâye. \\
+4 & Mitişik Kız & Fantastik & Dev anasını akıllılıkla alt eden bir kızın hikâyesi. \\
+5 & Korkak Adam ve Devler & Fantastik & Korkak bir adamın devleri kurnazlıkla yendiği bir anlatı. \\
+6 & Kırk Dost Masalı & Eğitici & Çıkara dayalı dostluğu konu alan, sonunda ders çıkarılan bir masal. \\
+7 & Üç Haylaz Masalı & Hayvan & Çiftlikten kaçan üç hayvanın başına gelenleri anlatan, ders içeren bir masal. \\
+8 & İncili Çadır & Fantastik & Yeraltı sarayı, incili çadır ve kılık değiştirme gibi masal ögeleri içeren bir anlatı. \\
+\bottomrule
+\end{longtable}
+
+% ====================================================================
+\section{Tasarım Kararları}
+% ====================================================================
+
+\subsection{Konuya Uygunluk}
+Sayfanın ana fikri, masalları fiziksel bir kitaplık gibi sunmaktır. Her masalın kendi
+renkli kapağı olan bir kitabı vardır ve kitap tıklanınca açılır. Kapak renkleri
+(krem, adaçayı yeşili, lila, gül, pudra, mürdüm, turkuaz, mavi) canlı değil, yumuşak ve
+mat tonlardan seçilmiştir. Masal metinleri ve kapak başlıkları, kitap baskısını
+çağrıştıran serifli (Georgia) yazı tipiyle; arayüz ögeleri ise sade bir sistem yazı
+tipiyle yazılmıştır. Her kitabın altında ``Anonim Türk Masalı'' ibaresi yer alır.
+
+\subsection{Renk Paleti ve Yazı Tipi}
+\begin{center}
+\rowcolors{2}{acik}{white}
+\begin{tabular}{@{}llp{6.4cm}@{}}
+\toprule
+\rowcolor{ana}\textcolor{white}{\textbf{Ad}} & \textcolor{white}{\textbf{Kod}} & \textcolor{white}{\textbf{Nerede / neden kullandınız?}} \\
+\midrule
+Zemin (açık gri)   & \texttt{\#fbfbfb} & Sayfa zemini; metinle yüksek karşıtlık sağlar. \\
+Ana metin (siyah)  & \texttt{\#111111} & Başlıklar ve arayüz yazıları. \\
+Soluk metin (gri)  & \texttt{\#777777} & Yazar satırı ve ikincil bilgiler. \\
+Çizgi (açık gri)   & \texttt{\#e2e2e2} & Bölüm ayırıcı çizgiler ve kutu kenarlıkları. \\
+Kapak renkleri     & \texttt{\#f4ebd0}, \texttt{\#93a193}, \texttt{\#b5adc0}, \texttt{\#d69f93}, \texttt{\#f2c6d0}, \texttt{\#5c4154}, \texttt{\#54737a}, \texttt{\#8da4c4} & Her masala bir kapak rengi verilir; kitapları birbirinden ayırır. \\
+Georgia (serifli)  & -- & Masal metinleri ve kitap kapağı başlıkları. \\
+Sistem yazı tipi (sans-serif) & -- & Menü, düğmeler ve alt bilgi. Sayfa internetsiz çalışacağı için harici yazı tipi kullanılmamıştır. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Okunabilirlik, Gezinme ve Duyarlı Tasarım}
+\begin{itemize}
+  \item \textbf{Okunabilirlik:} Okuma ekranında metin genişliği en fazla 700 piksel ile sınırlandırılmıştır. Satır aralığı 1,8, varsayılan yazı boyutu 1,1~rem'dir. Koyu metin açık zemin üzerinde yer alır. Metin iki yana yaslıdır.
+  \item \textbf{Gezinme:} Kullanıcı kütüphane ekranında başlığa göre arama yapabilir veya tür listesinden süzme yapabilir. Bir kitaba tıklayınca masal açılır; ``Geri Dön'' düğmesi kütüphaneye döndürür. ``Hakkında'' düğmesi proje bilgisini açıp kapatır.
+  \item \textbf{Duyarlı tasarım:} Kitaplar CSS grid ile dizilir. Ekran genişliği 768 pikselin altına inince üst menü dikey hâle gelir, kitap sütunları daralır ve okuma ekranı kenar boşlukları küçülür.
+  \item \textbf{Tutarlılık:} Köşeleri yuvarlatılmış ``kapsül'' biçimli giriş kutusu, düğme ve seçim kutusu aynı kenarlık ve renklerle tasarlanmıştır. Renkler ve boşluklar CSS değişkenleri ve ortak sınıflarla yönetilmiştir.
+\end{itemize}
+
+\subsection{Ekran Görüntüleri}
+% Dosyalar Overleaf projesinin ana klasöründe şu adlarla durmalı:
+%   ekran-masaustu.png  ve  ekran-mobil.png
+\begin{center}
+  \begin{minipage}[b]{0.64\textwidth}
+    \centering
+    \ekrangorsel{ekran-masaustu.png}{\linewidth}\\[4pt]
+    {\small Bilgisayar görünümü}
+  \end{minipage}\hfill
+  \begin{minipage}[b]{0.30\textwidth}
+    \centering
+    \ekrangorsel{ekran-mobil.png}{\linewidth}\\[4pt]
+    {\small Telefon görünümü}
+  \end{minipage}
+  \par\smallskip
+  \captionof{figure}{Sayfanın kütüphane görünümü: bilgisayar (solda) ve telefon (sağda)}
+\end{center}
+
+% ====================================================================
+\section{Gerçekleştirme}
+% ====================================================================
+
+\subsection{HTML Yapısı}
+Sayfa dört ana bölümden oluşur: üst bilgi (\texttt{<header>}; logo, arama kutusu ve
+``Hakkında'' düğmesi), kütüphane görünümü (başlık, tür süzgeci ve kitapların dizildiği
+\texttt{<main>}), okuma görünümü (araç çubuğu ve masal metni alanı) ve alt bilgi
+(\texttt{<footer>}). ``Hakkında'' metni ayrı bir \texttt{<section>} içindedir ve
+başlangıçta gizlidir. Masal metinleri, sayfada görünmeyen bir \texttt{<div>} içinde
+\texttt{<article>} etiketleriyle tutulur. Her \texttt{<article>} etiketinde
+\texttt{data-title}, \texttt{data-theme} ve \texttt{data-category} öznitelikleri bulunur.
+
+\subsection{İçsel CSS}
+Renkler \texttt{:root} içinde değişken olarak tanımlanmıştır. Kitap kapakları
+\texttt{transform-style: preserve-3d} ve \texttt{rotateY(-160deg)} ile açılır.
+Kitaplar \texttt{grid} ile, üst menü ve araç çubuğu \texttt{flex} ile dizilmiştir.
+\texttt{@media (max-width: 768px)} kuralı telefon düzenini belirler.
+
+\begin{lstlisting}[caption={İçsel CSS'ten önemli bir bölüm}]
+#library-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 4rem 3rem;
+}
+
+@media (max-width: 768px) {
+    #library-view {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 2.5rem 1rem;
+    }
+}
+\end{lstlisting}
+
+\subsection{İçsel JavaScript}
+Masal verisi, HTML içindeki gizli \texttt{<article>} etiketlerinde tutulur. Sayfa
+yüklenince \texttt{querySelectorAll} ile bu etiketler okunur ve her biri için bir
+kitap (kapak, arka kapak ve başlık bilgisi) \texttt{createElement} ile oluşturulup
+kütüphaneye eklenir. Kitaba tıklanınca \texttt{is-open} sınıfı eklenir; 800 milisaniye
+sonra kütüphane gizlenir, okuma görünümü açılır ve masalın metni okuma alanına
+yazılır. Arama kutusundaki \texttt{input} olayı ve tür listesindeki \texttt{change}
+olayı \texttt{filtreleriUygula} fonksiyonunu çalıştırır. Bu fonksiyon, başlığı aranan
+kelimeyi içeren ve seçilen türe uyan kitapları gösterir, diğerlerini gizler.
+\texttt{fontDegistir} fonksiyonu okuma yazısını 0,9~rem ile 1,8~rem arasında
+0,15~rem adımlarla değiştirir.
+
+\begin{lstlisting}[caption={İçsel JavaScript'ten önemli bir bölüm}]
+function filtreleriUygula() {
+    const arananKelime = aramaKutusu.value.toLowerCase();
+    const secilenKategori = kategoriFiltresi.value;
+    const tumKitaplar = document.querySelectorAll('.book-wrapper');
+
+    tumKitaplar.forEach(kitap => {
+        const kitapBasligi = kitap.getAttribute('data-title');
+        const kitapKategorisi = kitap.getAttribute('data-category');
+
+        const kelimeUyuyor = kitapBasligi.includes(arananKelime);
+        const kategoriUyuyor = (secilenKategori === 'tumu' || secilenKategori === kitapKategorisi);
+
+        if(kelimeUyuyor && kategoriUyuyor) {
+            kitap.style.display = 'flex';
+        } else {
+            kitap.style.display = 'none';
+        }
+    });
+}
+\end{lstlisting}
+
+\subsection{Sayfanın Özellikleri}
+\begin{itemize}
+  \item Üç boyutlu, açılan kitap kapağı efekti.
+  \item Masal başlığına göre arama.
+  \item Hayvan, eğitici ve fantastik masallara göre süzme.
+  \item Okuma ekranında yazı boyutunu küçültme ve büyütme (A$-$ / A+).
+  \item ``Hakkında'' bölümünü açıp kapatma ve Türkiye Kültür Portalı bağlantısı.
+  \item Okuma ekranından kütüphaneye geri dönme.
+  \item 768 pikselin altındaki ekranlar için duyarlı düzen.
+\end{itemize}
+
+% ====================================================================
+\section{Yapay Zekâ Kullanımı}
+% ====================================================================
+
+\begin{longtable}{@{}p{2.6cm}p{3.6cm}p{4.2cm}p{3.4cm}@{}}
+\toprule
+\textbf{Araç} & \textbf{Ne için kullandınız?} & \textbf{İstem (prompt) özeti} & \textbf{Sayfada nerede?} \\
+\midrule
+\endhead
+Gemini & Kod (fonksiyonların çalışması) & Sayfadaki fonksiyonlar çalıştırıldığında kodun ne yaptığını ve nasıl işlediğini açıklamasını istedim. & İçsel JavaScript bölümü (Bölüm 4.3) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Anladığım ve Kendim Yaptığım Kısımlar}
+Gemini'yi, sayfadaki fonksiyonlar çalıştığında kodun neyi nasıl yaptığını anlamak
+için kullandım. Bu açıklamalar sayesinde olayların (tıklama, \texttt{input},
+\texttt{change}) hangi fonksiyonu çalıştırdığını ve verinin gizli
+\texttt{<article>} etiketlerinden kitaplara nasıl dönüştüğünü sunumda anlatabilecek
+düzeye getirdim.
+
+Ayrıca koda eklenebilecek açık kaynaklı çözümleri inceledim. Fuse.js, yazım hatalarını
+tolere eden, bağımlılığı olmayan ve Apache 2.0 lisanslı bir
+bulanık arama kütüphanesidir\footnote{Fuse.js:
+\url{https://github.com/krisk/Fuse}, erişim tarihi: 5 Kasım 2026.}.
+mark.js, arama sonuçlarında anahtar kelimeleri vurgulamak için kullanılabilen, MIT
+lisanslı bir kütüphanedir\footnote{mark.js:
+\url{https://github.com/julkue/mark.js}, erişim tarihi: 5 Kasım 2026.}.
+Bu kütüphaneler masal metni içinde arama ve eşleşen kelimeyi vurgulama gibi
+geliştirmelere uygun olabilir; bu benim değerlendirmemdir. Ancak ödev yönergesi sayfanın
+internetsiz çalışmasını istediği ve harici kütüphane kullanılmamasını söylediği için
+bunları sayfaya eklemedim. Türkçe harflerin aramada doğru eşleşmesi için ise
+JavaScript'in kendi \texttt{toLocaleLowerCase('tr')} yönteminin kullanılabileceğini
+öğrendim\footnote{MDN Web Docs, \emph{String.prototype.toLocaleLowerCase()}:
+\url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLocaleLowerCase},
+erişim tarihi: 5 Kasım 2026.}.
+
+% ====================================================================
+\section{Haftalık Katkılar}
+% ====================================================================
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.7cm}%
+                    >{\raggedright\arraybackslash}p{6.4cm}%
+                    >{\centering\arraybackslash}p{6cm}@{}}
+\toprule
+\rowcolor{ana}\textcolor{white}{\textbf{Hafta}} & \textcolor{white}{\textbf{Yapılan çalışma}} & \textcolor{white}{\textbf{Görsel}} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{ana}\textcolor{white}{\textbf{Hafta}} & \textcolor{white}{\textbf{Yapılan çalışma}} & \textcolor{white}{\textbf{Görsel}} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+\textbf{1. hafta}\newline 07.10.2026 &
+WorldWideWeb sayfasının temel HTML etiketleri (h1, p, ul vb.) ile ilk iskeleti oluşturuldu.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/1Wlyv1icZobCmtnveznaIZm8JtNZ-Ol32}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta12jpg.jpg} \\
+\midrule
+\textbf{2. hafta}\newline 07.10.2026 &
+WorldWideWeb sayfası içsel CSS ile biçimlendirilerek renk ve tipografi ayarları yapıldı.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/1Wlyv1icZobCmtnveznaIZm8JtNZ-Ol32}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta12ajpg.jpg} \\
+\midrule
+\textbf{3. hafta}\newline 07.10.2026 &
+Frutiger Aero temalı web arayüzü için CSS Grid/Flexbox düzenleri ve form elemanları kodlandı.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/1u9egfAF82-hVE33o2iLil3hkjuRdCLM1}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta3.jpg} \\
+\midrule
+\textbf{4. hafta}\newline 07.10.2026 &
+HTML ve CSS ile "Shrek Sineması" bilgi kartı sayfası oluşturuldu; \texttt{<figure>} ve \texttt{<figcaption>} yapısı kullanıldı.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/1ITVjYrJb51h5vZ_Pc2U5IV5w4n8aCY6M}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta4x3.jpg} \\
+\midrule
+\textbf{5. hafta}\newline 21.10.2026 &
+"Çiçek Eşleştirme" kart oyunu arayüzü CSS Grid ile dizayn edildi ve hover efektleri eklendi.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/1N-IhR0fx5eB_lX_PL0x4CovzYzwQvaWV}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta5.jpg} \\
+\midrule
+\textbf{6. hafta}\newline 21.10.2026 &
+JavaScript \texttt{onclick} fonksiyonu ile "Işığı Aç / Söndür" uygulaması geliştirildi ve Bootstrap temelleri incelendi.\newline \textbf{Commit:} \href{https://drive.google.com/drive/u/0/folders/15i-x3up5RjHJ99sYIgIHuNVZrH_m3VTH}{Drive Bağlantısı}\katilimkutulari &
+\haftagorsel{hafta6x2.jpg} \\
+\midrule
+\textbf{7. hafta}\newline [tarih] &
+[Bu hafta yaptığınız çalışma.]\newline \textbf{Commit:} [mesaj veya bağlantı]\katilimkutularibos &
+\haftagorsel{hafta7.png} \\
+\midrule
+\textbf{8. hafta}\newline [tarih] &
+[Bu hafta yaptığınız çalışma.]\newline \textbf{Commit:} [mesaj veya bağlantı]\katilimkutularibos &
+\haftagorsel{hafta8.png} \\
+\end{longtable}
+
+% ====================================================================
+\section{Test ve Değerlendirme}
+% ====================================================================
+
+\begin{center}
+\rowcolors{2}{acik}{white}
+\begin{tabular}{@{}p{6cm}p{3.4cm}p{3.4cm}@{}}
+\toprule
+\rowcolor{ana}\textcolor{white}{\textbf{Özellik}} & \textcolor{white}{\textbf{Bilgisayar}} & \textcolor{white}{\textbf{Telefon}} \\
+\midrule
+Kitap kapağı açılması ve masal okuma & Çalışıyor & Çalışıyor \\
+Başlığa göre arama                   & Çalışıyor & Çalışıyor \\
+Türe göre süzme                      & Çalışıyor & Çalışıyor \\
+Yazı boyutu (A$-$ / A+)              & Çalışıyor & Çalışıyor \\
+Hakkında bölümü                      & Çalışıyor & Çalışıyor \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Denenen tarayıcılar:} Firefox ve Safari.
+
+% ====================================================================
+\section{Sunum Videosu}
+% ====================================================================
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\textbf{Video süresi:} & 15:30 \quad \aciklama{12--18 dakika olmalıdır} \\
+\textbf{Görünürlük:} & Herkese açık \\
+\textbf{Bağlantı:} & \youtubelink \\
+\end{tabular}
+\end{center}
+
+\subsection{Video Kontrol Listesi}
+\aciklama{Teslimden önce hepsini kontrol edin ve kutuları $\boxtimes$ ile işaretleyin.}
+\begin{itemize}[label={}]
+  \item $\boxtimes$ Süre 12--18 dakika aralığında.
+  \item $\boxtimes$ Sunum boyunca kameram açık, yüzüm görünüyor.
+  \item $\boxtimes$ Görünürlük \textbf{Listelenmemiş} (ya da Herkese açık); \textbf{Özel} değil.
+  \item $\boxtimes$ Bağlantıyı gizli pencerede açtım, video oynuyor.
+  \item $\boxtimes$ YouTube videoyu işlemeyi bitirdi.
+  \item $\boxtimes$ Videoyu baştan sona izledim; ses ve kamera tüm sunumda var.
+  \item $\boxtimes$ Kapaktaki bağlantı ile bu bölümdeki bağlantı aynı.
+\end{itemize}
+
+% ====================================================================
+\section{Sonuç ve Kendi Değerlendirmem}
+% ====================================================================
+Bu projede sekiz Türk masalını, tek bir HTML dosyası içinde HTML, içsel CSS ve içsel
+JavaScript ile okunabilir bir web sayfasına dönüştürdüm. Masalları fiziksel bir
+kitaplık gibi sunan üç boyutlu kitap kapakları, sayfanın temel tasarım fikri oldu.
+JavaScript ile masal verisinin kitaplara dönüştürülmesini, başlığa göre aramayı, türe
+göre süzmeyi ve okuma ekranındaki yazı boyutu ayarını öğrendim ve uyguladım. Sayfayı
+bilgisayarda ve telefonda, Firefox ve Safari tarayıcılarında denedim. İleride aramayı
+yalnızca başlıkla sınırlı bırakmayıp masal metni içinde de yapmak ve okuyucunun yazı
+boyutu tercihini hatırlamak gibi geliştirmeler eklemek isterim.
+
+% ====================================================================
+\section{Kaynakça}
+% ====================================================================
+\begin{thebibliography}{9}
+\bibitem{k1} T.C. Kültür ve Turizm Bakanlığı. \emph{Türkiye Kültür Portalı: Masallar}.
+\url{https://www.kulturportali.gov.tr/portal/masallar-1}, erişim tarihi: 5 Kasım 2026.
+\end{thebibliography}
+
+% ====================================================================
+\appendix
+\section{Teslim Kontrol Listesi}
+% ====================================================================
+\begin{itemize}[label={}]
+  \item $\boxtimes$ MEBİS'e \textbf{yalnızca bu raporun PDF'ini} yükleyeceğim. ZIP ve HTML dosyası yüklemeyeceğim.
+  \item $\boxtimes$ PDF dosya adı \texttt{OgrenciNo\_AdSoyad\_vize.pdf} biçiminde.
+  \item $\boxtimes$ Kapaktaki GitHub ve YouTube bağlantıları doğru; PDF'te tıklayıp denedim.
+  \item $\boxtimes$ GitHub deposunda web sayfası (tek \texttt{.html}), rapor PDF'i, \texttt{.tex} kaynakları ve \texttt{README.md} var.
+  \item $\boxtimes$ GitHub deposu \textbf{herkese açık} (ya da öğretim üyesine erişim verdim).
+  \item $\boxtimes$ Çalışmamın son hâli teslim saatinden \textbf{önce} depoya gönderildi (sonraki commitler değerlendirilmez).
+  \item $\boxtimes$ Sayfa içsel CSS ve içsel JavaScript kullanıyor, harici dosya gerektirmiyor.
+  \item $\boxtimes$ Hazır taslak kullanmadım; yapay zekâ kullandıysam Bölüm 5'i doldurdum.
+  \item $\boxtimes$ Çalışmanın mantığını sunumda anlatabilirim.
+\end{itemize}
+
+\end{document}
